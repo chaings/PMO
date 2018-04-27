@@ -391,7 +391,34 @@ var path='<%=path%>';
 										</div>
 									</div>
 									<div class="group">
-											
+										<label class="col-sm-2 control-label">Chsofti Pro Number</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" name="chsoftiProNumber"
+												   id="chsoftiProNumber" data-bv-group=".group"/>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="group">
+										<label class="col-sm-2 control-label">Chsofti Pro StartDate</label>
+										<div class="col-md-4">
+											<div class="input-group date form_datetime3 col-sm-12"
+												 data-link-field="dt_set_order_time_input">
+												<input class="form-control" type="text" readonly data-bv-group=".group"
+													   id="chsoftiProStartDate1" name="chsoftiProStartDate1"> <span
+													class="input-group-addon"><span
+													class="glyphicon glyphicon-calendar"></span></span> <input type="hidden" id="chsoftiProStartDate2" name="chsoftiProStartDate2" />
+											</div>
+										</div>
+									</div>
+
+									<div class="group">
+										<label class="col-sm-2 control-label">Chsofti Pro Name</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" name="chsoftiProName"
+												   id="chsoftiProName" data-bv-group=".group"/>
+										</div>
 									</div>
 								</div>
 								<!-- <div class="form-group">

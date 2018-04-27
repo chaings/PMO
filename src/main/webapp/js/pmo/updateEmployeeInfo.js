@@ -72,6 +72,11 @@ function updateEmployee() {
 		var email =  $('#email').val();
 		var entryDate = $('#entryDate1').val();
 		var gbGf = $('#gbGf').val();
+		
+		var chsoftiProNumber =  $('#chsoftiProNumber').val();
+		var chsoftiProStartDate1 = $('#chsoftiProStartDate1').val();
+		var chsoftiProName = $('#chsoftiProName').val();
+		
 		//拿到IT行业工作年限
 		var itWorkYear = $("#itworkyear").val();
 		
@@ -100,7 +105,9 @@ function updateEmployee() {
 			url:path+'/service/employee/updateEmployee',
 			dataType:"json",
 			data:{"employeeId":employeeId,"eHr":eHr,"lob":lob,"hsbcStaffId":hsbcStaffId,"staffName":staffName,"LN":LN,"staffRegion":staffRegion,"staffLocation":staffLocation,"locationType":locationType,"onshoreOrOffshore":onshoreOrOffshore,"csSubDept":csSubDept,"hsbcSubDept":hsbcSubDept,"projectName":projectName,"projectManager":projectManager,"sow":sow,"sowExpiredDate":sowExpiredDate,"staffCategory":staffCategory,"engagementType":engagementType,"hsbcDOJ":hsbcDOJ,"graduationDate":graduationDate,"role":role,"skill":skill,"billingCurrency":billingCurrency,"billRate":billRate,"resourceStatus":resourceStatus,"terminatedDate":terminatedDate,"terminationReason":terminationReason,
-				"email":email,"entryDate":entryDate,"gbGf":gbGf,"itindustryWorkYear":itWorkYear},
+				"email":email,"entryDate":entryDate,"gbGf":gbGf,"itindustryWorkYear":itWorkYear,
+				"chsoftiProNumber":chsoftiProNumber,"chsoftiProStartDate":chsoftiProStartDate1,"chsoftiProName":chsoftiProName	
+			},
 			async:true,
 			cache:false,
 			type:"post",
@@ -169,6 +176,9 @@ function loadEmployeeInfo() {
 			$('#email').val(employee.email);
 			$('#entryDate1').val(employee.entryDate);
 			$('#itworkyear').val(employee.itindustryWorkYear);
+			$('#chsoftiProNumber').val(employee.chsoftiProNumber);
+			$('#chsoftiProStartDate1').val(employee.chsoftiProStartdate);
+			$('#chsoftiProName').val(employee.chsoftiProName);
 		}
 	})
 }
@@ -192,6 +202,7 @@ function dateType() {
 		 $('#updateEmployeeForm').bootstrapValidator('revalidateField', 'entryDate1');
 		 $('#updateEmployeeForm').bootstrapValidator('revalidateField', 'hsbcDOJ1');
 		 $('#updateEmployeeForm').bootstrapValidator('revalidateField', 'terminatedDate1');
+		 $('#updateEmployeeForm').bootstrapValidator('revalidateField', 'chsoftiProStartDate1');
 	});;
 }
 

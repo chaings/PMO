@@ -60,40 +60,40 @@ import jxl.write.WritableWorkbook;
 @Controller
 @RequestMapping(value="/employee")
 public class EmployeeController {
-	
+
 	private static Logger logger = LoggerFactory
             .getLogger(EmployeeController.class);
-	
+
 	@Resource
     private EmployeeService employeeService;
-	
+
 	@Resource
     private CSDeptService csDeptService;
-	
+
 	@Resource
     private HSBCDeptService hsbcDeptService;
-	
+
 	@Resource
     private HSBCProjectService hsbcProjectService;
-	
+
 	@Resource
 	private UserService userService;
-	
+
 	@Resource
 	private EmployeeLogService  employeeLogService;
-	
+
 	@Resource
 	private CandidateService candidateService;
 
 
-	
+
     @RequestMapping("/welcome")
     public String welcome(final HttpServletRequest request,
             final HttpServletResponse response)
     {
         return "welcome";
     }
-	
+
     @SuppressWarnings("unchecked")
 	@RequestMapping("/index")
     public String index(final HttpServletRequest request,
@@ -125,24 +125,24 @@ public class EmployeeController {
     		model.addAttribute("employee", em);
 			return "OnboardEmployeeInsert";
     	}
-    	
+
         return "indexa";
     }
-    
+
     @RequestMapping("/employeeInfo")
     public String employeeInfo(final HttpServletRequest request,
             final HttpServletResponse response)
     {
         return "employee/employeeInfo";
     }
-    
+
     @RequestMapping("/updateEmployeeInfo")
     public String updateEmployeeInfo(final HttpServletRequest request,
             final HttpServletResponse response,String type)
     {
         String employeeId = request.getParameter("employeeId");
         request.setAttribute("employeeId", employeeId);
-        
+
         if("1".equals(type)) {
         	return "employee/updateEmployeeInfo";
     	}else if("2".equals(type)) {
@@ -151,28 +151,28 @@ public class EmployeeController {
     		return "employee/updateEmployeeInfo3";
     	}
     }
-    
-    
+    public static Timestamp str2TimeStamp(String date){ Timestamp ts = new Timestamp(System.currentTimeMillis()); try { ts = Timestamp.valueOf(date); } catch (Exception e) { e.printStackTrace(); } return ts; }
+
     @RequestMapping("/queryEmployeeById")
     @ResponseBody
     public Object queryEmployeeById(final HttpServletRequest request,
             final HttpServletResponse response)
     {
         String employeeId = request.getParameter("employeeId");
-        
+
         Employee employee = employeeService.queryEmployeeById(employeeId);
-        
+
         return employee;
     }
-    
-    
+
+
     @RequestMapping("/addEmployee")
     @ResponseBody
     public boolean addEmployee(final HttpServletRequest request,
             final HttpServletResponse response)
     {
-        
-        String employeeId = Utils.getUUID(); 
+
+        String employeeId = Utils.getUUID();
         String eHr = request.getParameter("eHr");
         String lob = request.getParameter("lob");
         String hsbcStaffId = request.getParameter("hsbcStaffId");
@@ -199,12 +199,19 @@ public class EmployeeController {
         String resourceStatus = request.getParameter("resourceStatus");
         String terminatedDate = request.getParameter("terminatedDate");
         String terminationReason = request.getParameter("terminationReason");
-        
+
         String email = request.getParameter("email");
         String gbGf = request.getParameter("gbGf");
         String entryDate = request.getParameter("entryDate");
         String rmUserId = request.getParameter("rmUserId");
         String itindustryWorkYear = request.getParameter("itindustryWorkYear");
+
+        //add begin
+        String chsoftiProNumber = request.getParameter("chsoftiProNumber");
+        String chsoftiProStartDate1 = request.getParameter("chsoftiProStartDate");
+        String chsoftiProName = request.getParameter("chsoftiProName");
+        //add end
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date curDate = new Date();
         Timestamp createTime = null;
@@ -213,6 +220,8 @@ public class EmployeeController {
 		} catch (ParseException e) {
 			logger.error(e.getMessage());
 		}
+		
+		
         Timestamp updateTime = createTime;
         Employee employee = new Employee(employeeId,eHr,lob,
                 hsbcStaffId, staffName, LN, staffRegion,
@@ -223,13 +232,14 @@ public class EmployeeController {
                 graduationDate, role, skill,
                 billingCurrency, billRate, resourceStatus,
                 terminatedDate, terminationReason,email,gbGf,
-                entryDate,rmUserId, createTime, updateTime,itindustryWorkYear);
-        
+                entryDate,rmUserId, createTime, updateTime,itindustryWorkYear,
+                chsoftiProNumber,chsoftiProStartDate1,chsoftiProName);
+
         boolean resultFlag = employeeService.addEmployee(employee);
         if(resultFlag) {
         	String candidateId=(String) request.getSession().getAttribute("onboardCandidateId");
     		candidateService.updateOnboardCandidate(candidateId);
-    		
+
     		/**
              * 添加日志
              */
@@ -247,8 +257,8 @@ public class EmployeeController {
         }
         return resultFlag;
     }
-   
-    
+
+
     @RequestMapping("/updateEmployee")
     @ResponseBody
     public boolean updateEmployee(final HttpServletRequest request,
@@ -281,18 +291,25 @@ public class EmployeeController {
         String resourceStatus = request.getParameter("resourceStatus");
         String terminatedDate = request.getParameter("terminatedDate");
         String terminationReason = request.getParameter("terminationReason");
-        
+
         String email = request.getParameter("email");
         String gbGf = request.getParameter("gbGf");
         String entryDate = request.getParameter("entryDate");
         String rmUserId = request.getParameter("rmUserId");
         String itindustryWorkYear = request.getParameter("itindustryWorkYear");
-
+        
+        //add begin
+        String chsoftiProNumber = request.getParameter("chsoftiProNumber");
+        String chsoftiProStartdate = request.getParameter("chsoftiProStartDate");
+        String chsoftiProName = request.getParameter("chsoftiProName");
+        //add end
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date curDate = new Date();
         Timestamp updateTime = null;
+        //Timestamp chsoftiProStartDate = null;
 		try {
 			updateTime = new Timestamp(sdf.parse(sdf.format(curDate)).getTime());
+			//chsoftiProStartDate = new Timestamp(sdf.parse(chsoftiProStartDate1).getTime());
 		} catch (ParseException e) {
 			logger.error(e.getMessage());
 		}
@@ -307,8 +324,10 @@ public class EmployeeController {
                 staffCategory, engagementType, hsbcDOJ,
                 graduationDate, role, skill,
                 billingCurrency, billRate, resourceStatus,
-                terminatedDate, terminationReason,email,gbGf,entryDate,rmUserId,updateTime,itindustryWorkYear);
-        
+                terminatedDate, terminationReason,email,gbGf,entryDate,rmUserId,updateTime,itindustryWorkYear,
+                chsoftiProNumber,chsoftiProStartdate,chsoftiProName
+        		);
+
         /**
          * 添加日志
          */
@@ -326,13 +345,13 @@ public class EmployeeController {
             	log.setUpdateDate(Timestamp.valueOf(ts));
 				boolean flag = employeeLogService.save(log);
     		}
-			
+
         }catch(Exception e){
         	e.printStackTrace();
         }
-        
+
         boolean resultFlag = employeeService.updateEmployee(employee);
-        
+
         return resultFlag;
     }
 
@@ -346,9 +365,9 @@ public class EmployeeController {
     @ResponseBody
 	public String checkEhr(String eHr){
 		boolean result = true;
-		
+
 		List<Employee> e = employeeService.selectByEhr(eHr);
-		
+
 		if(e!=null&&e.size()>0){
 			result = false;
 		}
@@ -373,9 +392,9 @@ public class EmployeeController {
 	@ResponseBody
 	public String checkHSBCStaffID(String hsbcStaffId){
 		boolean result = true;
-		
+
 		List<Employee> e = employeeService.selectByHSBCStaffID(hsbcStaffId);
-		
+
 		if(e!=null&&e.size()>0){
 			result = false;
 		}
@@ -400,9 +419,9 @@ public class EmployeeController {
 	@ResponseBody
 	public String checkLob(String lob){
 		boolean result = true;
-		
+
 		List<Employee> e = employeeService.selectByLob(lob);
-		
+
 		if(e!=null&&e.size()>0){
 			result = false;
 		}
@@ -423,29 +442,29 @@ public class EmployeeController {
              HttpServletResponse response)
     {
         //EmployeePageCondition empListCondition = (EmployeePageCondition) request.getSession().getAttribute("empListCondition");
-        
+
         EmployeePageCondition empListCondition = (EmployeePageCondition) request.getSession().getAttribute("employeePageCondition");
-        
+
         List<String> conditionList = (List<String>) request.getSession().getAttribute("conditionList");
-        
+
         try {
                //获取当前日期
                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                String date = df.format(new Date());
-            
+
                String fileName =  Constants.PATH+""+Utils.getUUID()+".xls";
-               
-               
+
+
                WritableWorkbook wwb = null;
-            
+
                // 创建可写入的Excel工作簿
-               
+
                //创建 Constants.PATH文件夹
                File folder = new File( Constants.PATH);
                if(!folder.exists()){
             	   folder.mkdirs();
                }
-               
+
                //创建  file
                File file=new File(fileName);
                if (!file.exists()) {
@@ -456,25 +475,25 @@ public class EmployeeController {
 
                // 创建工作表
                WritableSheet ws = wwb.createSheet("Headcount", 0);
-               
+
                //查询数据库中所有的数据
                List<Employee> listE = employeeService.queryEmployeeList(empListCondition);
-               
+
                //要插入到的Excel表格的行号，默认从0开始
-               
+
                    Label labelSL= new Label(0, 0, "SL#");
                    ws.addCell(labelSL);
-               
+
                for(int k=0;k<conditionList.size();k++){
                    Label label = new Label(k+1, 0, conditionList.get(k));
-                   
+
                    ws.addCell(label);
                }
-               
-               List<CSDept> allCSDept = csDeptService.queryAllCSDept();               
+
+               List<CSDept> allCSDept = csDeptService.queryAllCSDept();
                List<HSBCDept> allHSBCDept = hsbcDeptService.queryAllHSBCDept();
                List<User> allRM = userService.getUserForRM();
-               
+
                CSDept csDept = null;
                HSBCDept hsbcDept = null;
                List<String> subDeptIdColl = new ArrayList<String>();
@@ -498,10 +517,10 @@ public class EmployeeController {
 								break;
 							}
 						}
-						
+
 					}
 				}
-	
+
 				if(listE.get(i - 1).getHsbcSubDept()!=null){
 					for (HSBCDept hsbcD : allHSBCDept) {
 						if (hsbcD.getHsbcSubDeptId().equals(listE.get(i - 1).getHsbcSubDept())) {
@@ -512,59 +531,59 @@ public class EmployeeController {
 				}else {
 					hsbcDept = null;
 				}
-                   
+
                    int j = 0;
-                   
+
                    Label labelSL_i= new Label(j, i, i+"");
                    ws.addCell(labelSL_i);
-                   
+
                    if(conditionList.contains("HSBC Staff ID")){
                        Label label= new Label(++j, i, listE.get(i-1).getHsbcStaffId());
                        ws.addCell(label);
-                   }                  
-                  
-                   
+                   }
+
+
                    if(conditionList.contains("Staff Name")){
                        Label label= new Label(++j, i, listE.get(i-1).getStaffName());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("LN")){
                        Label label= new Label(++j, i, listE.get(i-1).getLn());
                        ws.addCell(label);
                    }
-                   
-                   
+
+
                    if(conditionList.contains("E-Mail")){
                        Label label= new Label(++j, i, listE.get(i-1).getEmail());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Staff Region")){
                        Label label= new Label(++j, i, listE.get(i-1).getStaffRegion());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Staff Location (country)")){
                        Label label= new Label(++j, i, listE.get(i-1).getStaffLocation());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Location Type (HSBCOffice/ODC)")){
                        Label label= new Label(++j, i, listE.get(i-1).getLocationType());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Onshore or Offshore")){
                        Label label= new Label(++j, i, listE.get(i-1).getOnshoreOrOffshore());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("GB/GF")){
                        Label label= new Label(++j, i, listE.get(i-1).getGbGf());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("HSBC Dept")){
                        Label label = null;
                        if(hsbcDept == null){
@@ -574,7 +593,7 @@ public class EmployeeController {
                        }
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("HSBC Sub Dept")){
                        Label label = null;
                        if(hsbcDept == null){
@@ -586,44 +605,44 @@ public class EmployeeController {
                        }
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("HSBC Manager")){
                        Label label= new Label(++j, i, listE.get(i-1).getProjectManager());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Project Name")){
                        Label label= new Label(++j, i, listE.get(i-1).getProjectName());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("SOW#")){
                        Label label= new Label(++j, i, listE.get(i-1).getSow());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("SOW# Expired Date")){
                        Label label= new Label(++j, i, listE.get(i-1).getSowExpiredDate());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Staff Category(CATG/CATB)")){
                        Label label= new Label(++j, i, listE.get(i-1).getStaffCategory());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Engagement Type (T&M/FixedCost)")){
                        Label label= new Label(++j, i, listE.get(i-1).getEngagementType());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("HSBC DOJ")){
                        Label label= new Label(++j, i, listE.get(i-1).getHsbcDOJ());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Experience on HSBC account in Months")){
-                       Label label = null; 
+                       Label label = null;
                        if(listE.get(i-1).getHsbcDOJ() == null){
                            label= new Label(++j, i, "");
                        }else{
@@ -631,7 +650,7 @@ public class EmployeeController {
                        }
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Graduation Date")){
                        Label label = null;
                        if(listE.get(i-1).getGraduationDate() == null){
@@ -641,7 +660,7 @@ public class EmployeeController {
                        }
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Total Experience in Months")){
                        Label label = null;
                        if(listE.get(i-1).getGraduationDate() == null){
@@ -649,60 +668,60 @@ public class EmployeeController {
                        }else{
                            label= new Label(++j, i, Utils.caculateMonth(listE.get(i-1).getGraduationDate())+"");
                        }
-                       
+
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("MSA Role")){
                        Label label= new Label(++j, i, listE.get(i-1).getRole());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Skills/Technology")){
                        Label label= new Label(++j, i, listE.get(i-1).getSkill());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Entry Date")){
                        Label label= new Label(++j, i, listE.get(i-1).getEntryDate());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Billing Currency")){
                        Label label= new Label(++j, i, listE.get(i-1).getBillingCurrency());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Bill Rate")){
                        Label label= new Label(++j, i, listE.get(i-1).getBillRate());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Resource Status (Active/Terminated)")){
                        Label label= new Label(++j, i, listE.get(i-1).getResourceStatus());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("If terminated mention LWD")){
                        Label label= new Label(++j, i, listE.get(i-1).getTerminatedDate());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("Reason for Termination")){
                        Label label= new Label(++j, i, listE.get(i-1).getTerminationReason());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("E-HR")){
                        Label label= new Label(++j, i, listE.get(i-1).geteHr());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("LOB")){
                        Label label= new Label(++j, i, listE.get(i-1).getLob());
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("RM")){
 						String RMName = "";
 						for (User user : allRM) {
@@ -714,7 +733,7 @@ public class EmployeeController {
                        Label label= new Label(++j, i, RMName);
                        ws.addCell(label);
                    }
-                   
+
                    if(conditionList.contains("AM")){
                 	   if(csDept!=null) {
                 		   Label label= new Label(++j, i, csDept.getAm());
@@ -723,9 +742,9 @@ public class EmployeeController {
                 		   Label label= new Label(++j, i, "");
                            ws.addCell(label);
                 	   }
-                       
+
                    }
-                   
+
                    if(conditionList.contains("CS Dept")){
                 	   String temp = "";
                 	   String[] t = null;
@@ -749,33 +768,33 @@ public class EmployeeController {
                 					   }
                 				   }
                 			   }
-                			   
+
                 		   }
                 		   if(temp.indexOf(",")!=-1){
                 			   Label label= new Label(++j, i, temp.substring(0, temp.length()-1));
-                               ws.addCell(label); 
+                               ws.addCell(label);
                 		   }else{
                 			   Label label= new Label(++j, i, temp);
-                               ws.addCell(label); 
+                               ws.addCell(label);
                 		   }
                 	   }
                 	   if("".equals(temp)) {
                 		   Label label= new Label(++j, i, "");
-                           ws.addCell(label); 
+                           ws.addCell(label);
                 	   }
                    }
-                   
+
                    if(conditionList.contains("Itworkyear")){
                        Label label= new Label(++j, i, listE.get(i-1).getItindustryWorkYear());
                        ws.addCell(label);
                    }
-                   
+
                    //中软项目编号
                    if(conditionList.contains("Ch Pro Number")){
                        Label label= new Label(++j, i, listE.get(i-1).getChsoftiProNumber());
                        ws.addCell(label);
                    }
-                   
+
                    //项目开始日期
                    if(conditionList.contains("Ch Pro StartDate")){
                 	   if(listE.get(i-1).getChsoftiProStartdate()!=null && !"".equals(listE.get(i-1).getChsoftiProStartdate())){
@@ -783,22 +802,22 @@ public class EmployeeController {
                            ws.addCell(label);
                 	   }
                    }
-                   
+
                    //中软项目名称
                    if(conditionList.contains("Ch Pro Name")){
                        Label label= new Label(++j, i, listE.get(i-1).getChsoftiProName());
                        ws.addCell(label);
                    }
-                   
+
                }
-             
+
               //写进文档
                wwb.write();
               // 关闭Excel工作簿对象
                wwb.close();
-               
+
                String filename = "GSV Engagement Dashboard_"+date+".xls";
-               
+
                //fileName = URLEncoder.encode(filename,"UTF-8");
                //fileName = fileName.replace("+", " ");
 
@@ -815,20 +834,20 @@ public class EmployeeController {
                response.setContentType("application/vnd.ms-excel");
                response.addHeader("Content-Length", "" + file.length());
                OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-               
+
                toClient.write(buffer);
                toClient.flush();
                toClient.close();
-               
+
               file.delete();
-             
+
         } catch (Exception e) {
             e.printStackTrace();
-        } 
-        
+        }
+
         return null;
     }
-    
+
 
 
 /**
@@ -839,7 +858,7 @@ public class EmployeeController {
 @RequestMapping("/getTMemployee")
 public String getTMemployee(final HttpServletRequest request,
         final HttpServletResponse response,String status){
-	
+
 	if("1".equals(status)){
 		return "index1";
 	/*}else if("2".equals(status)){
@@ -980,7 +999,7 @@ public String entryEmployee(final HttpServletRequest request,
             	changeInfo.append("CsSubDept由["+oldname+"]变更为["+newsname+"];   ");
             	changeInfo.append("----");
             }
-            
+
         	//GBGF
             if(before.getGbGf()!=null && !before.getGbGf().equals(after.getGbGf())){
             	changeInfo.append("GbGf由["+before.getGbGf()+"]变更为["+after.getGbGf()+"];   ");
@@ -1109,11 +1128,11 @@ public String entryEmployee(final HttpServletRequest request,
     	finalchangeInfo[1]=new StringBuffer(projectStatus);
     	finalchangeInfo[2]=new StringBuffer(contractStatus);
     	finalchangeInfo[3]=new StringBuffer(levelStatus);
-    	
+
     	return finalchangeInfo;
     }
-    
-    
+
+
     private StringBuffer addInfo(Employee employee){
     	StringBuffer changeInfo = new StringBuffer();
     	if(employee!=null){
@@ -1254,7 +1273,7 @@ public String entryEmployee(final HttpServletRequest request,
     	}
     	return changeInfo;
     }
-    
+
     /**
      * Felix, 180116, Begin.
      * @param request
@@ -1292,13 +1311,13 @@ public String entryEmployee(final HttpServletRequest request,
     	graphParam.setBu(bu);
     	graphParam.setDu(du);
     	graphParam.setDuList(subDUIdList);
-    	empLogList = employeeLogService.queryEmpLogByDUNew(graphParam); 
-    	
+    	empLogList = employeeLogService.queryEmpLogByDUNew(graphParam);
+
     	Map<String, String> releaseMap01 = new HashMap<String, String>();
     	Map<String, String> levelMap01 = new HashMap<String, String>();
     	Map<String, String> terminatedMap01 = new HashMap<String, String>();
     	List<String> intoDUList01 = new ArrayList<String>();
-    	
+
     	Map<String, Map<Object, Object>> resultMap = new HashMap<String, Map<Object, Object>>();
     	Map<Object, Object> releaseMap = new HashMap<Object, Object>();
     	Map<Object, Object> levelMap = new HashMap<Object, Object>();
@@ -1317,7 +1336,7 @@ public String entryEmployee(final HttpServletRequest request,
     		resultMap.put("ymDataMap", xDataMap);
     		return resultMap;
     	}
-    	
+
     	// month change
     	int tempMonth = Integer.parseInt(empLogList.get(0).getUpdateDate().toString().substring(5, 7));
     	int xFlag = 1;
@@ -1348,7 +1367,7 @@ public String entryEmployee(final HttpServletRequest request,
     		String roleOrg = empLog.getRoleOriginal();
     		String duNew = empLog.getCsSubdeptIdNew();
     		String duOrg = empLog.getCsSubdeptIdOriginal();
-    		
+
     		// Release
     		if(!StringUtils.equals(statusNew, statusOrg) && "Released".equals(statusNew)){
     			if(releaseMap01.containsKey(empId)){
@@ -1360,7 +1379,7 @@ public String entryEmployee(final HttpServletRequest request,
     				releaseMap01.put(empId, statusOrg);
     			}
     		}
-    		
+
     		// Level
     		if(!StringUtils.equals(roleNew, roleOrg)){
     			if(levelMap01.containsKey(empId)){
@@ -1372,7 +1391,7 @@ public String entryEmployee(final HttpServletRequest request,
     				levelMap01.put(empId, roleOrg);
     			}
     		}
-    		
+
     		// Terminated
     		if(!StringUtils.equals(statusNew, statusOrg) && "Terminated".equals(statusNew)){
     			if(terminatedMap01.containsKey(empId)){
@@ -1384,12 +1403,12 @@ public String entryEmployee(final HttpServletRequest request,
     				terminatedMap01.put(empId, statusOrg);
     			}
     		}
-    		
+
     		// into
     		if(StringUtils.isNotEmpty(du) && !StringUtils.equals(duNew, duOrg) && !intoDUList01.contains(empId)){
     			intoDUList01.add(empId);
     		}
-    		
+
     		if(i == empLogList.size()-1){
     			releaseMap.put(xFlag, releaseMap01.size());
     			levelMap.put(xFlag, levelMap01.size());
@@ -1398,8 +1417,8 @@ public String entryEmployee(final HttpServletRequest request,
     			set.add(empLog.getUpdateDate().toString().substring(0, 7));
     		}
     	}
-    	
-    	
+
+
     	xDataMap.put("xDataSet", set);
     	if(StringUtils.isEmpty(du)){
     		resultMap.put("intoDUMap", null);
@@ -1424,7 +1443,7 @@ public String entryEmployee(final HttpServletRequest request,
     	int tempMonth = Integer.parseInt(outDUempLogList.get(0).getUpdateDate().toString().substring(5, 7));
     	List<String> outDUList01 = new ArrayList<String>();
     	int xFlag = 1;
-    	Set<String> ymSet = new TreeSet<String>(); 
+    	Set<String> ymSet = new TreeSet<String>();
     	for(int i=0; i<outDUempLogList.size(); i++){
     		EmployeeLog empLog = outDUempLogList.get(i);
     		String duNew = empLog.getCsSubdeptIdNew();
@@ -1455,5 +1474,5 @@ public String entryEmployee(final HttpServletRequest request,
     	return outDUMap;
     }
     // Felix, 180116, End.
-    
+
 }

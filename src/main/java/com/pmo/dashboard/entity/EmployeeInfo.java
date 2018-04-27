@@ -15,9 +15,30 @@ public class EmployeeInfo
     private String nickname;
     private String engagementType;
     
+    private String chsoftiProNumber;
+    private String chsoftiProStartdate;
+    private String chsoftiProName;
     
     
     
+	public String getChsoftiProNumber() {
+		return chsoftiProNumber;
+	}
+	public void setChsoftiProNumber(String chsoftiProNumber) {
+		this.chsoftiProNumber = chsoftiProNumber;
+	}
+	public String getChsoftiProStartdate() {
+		return chsoftiProStartdate;
+	}
+	public void setChsoftiProStartdate(String chsoftiProStartdate) {
+		this.chsoftiProStartdate = chsoftiProStartdate;
+	}
+	public String getChsoftiProName() {
+		return chsoftiProName;
+	}
+	public void setChsoftiProName(String chsoftiProName) {
+		this.chsoftiProName = chsoftiProName;
+	}
 	public String getEngagementType() {
 		return engagementType;
 	}

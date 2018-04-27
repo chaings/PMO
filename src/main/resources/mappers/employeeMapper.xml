@@ -37,19 +37,25 @@
 		<result property="rmUserId" column="RM_USER_ID" javaType="String" />
 		<result property="engagementType" column="ENGAGEMENT_TYPE" javaType="String" />
 		<result property="nickname" column="NICKNAME" javaType="String" />
+		<result column="ITINDUSTRY_WORK_YEAR" property="itindustryWorkYear" jdbcType="VARCHAR" />
 		<result property="chsoftiProNumber" column="CHSOFTI_PRO_NUMBER" javaType="String" />
 		<result property="chsoftiProStartdate" column="CHSOFTI_PRO_STARTDATE" javaType="String" />
 		<result property="chsoftiProName" column="CHSOFTI_PRO_NAME" javaType="String" />
-		<result column="ITINDUSTRY_WORK_YEAR" property="itindustryWorkYear" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	
 	<insert id="addEmployee" parameterType="com.pmo.dashboard.entity.Employee">
-	    insert into t_employee (EMPLOYEE_ID,HSBC_STAFF_ID,STAFF_NAME,LN,STAFF_REGION,STAFF_LOCATION,LOCATION_TYPE,ONSHORE_OR_OFFSHORE,SOW,SOW_EXPIRED_DATE,STAFF_CATEGORY,ENGAGEMENT_TYPE,HSBC_DOJ,GRADUATION_DATE,BILL_CURRENCY,BILL_RATE,RESOURCE_STATUS,MENTION_LWD,REASON_FOR_TERMINATION,E_HR,HSBC_SUBDEPT_ID,SKILL,ROLE,CS_SUBDEPT_ID,LOB,HSBC_MANAGER,HSBC_PROJECT_NAME,Email,GB_GF,ENTRY_DATE,RM_USER_ID,CREATE_TIME,UPDATE_TIME,ITINDUSTRY_WORK_YEAR)
+	    insert into t_employee (EMPLOYEE_ID,HSBC_STAFF_ID,STAFF_NAME,LN,STAFF_REGION,STAFF_LOCATION,LOCATION_TYPE,ONSHORE_OR_OFFSHORE,SOW,SOW_EXPIRED_DATE,STAFF_CATEGORY,ENGAGEMENT_TYPE,HSBC_DOJ,GRADUATION_DATE,BILL_CURRENCY,BILL_RATE,RESOURCE_STATUS,MENTION_LWD,REASON_FOR_TERMINATION,E_HR,HSBC_SUBDEPT_ID,SKILL,ROLE,CS_SUBDEPT_ID,LOB,HSBC_MANAGER,HSBC_PROJECT_NAME,Email,GB_GF,ENTRY_DATE,RM_USER_ID,CREATE_TIME,UPDATE_TIME,ITINDUSTRY_WORK_YEAR,CHSOFTI_PRO_NUMBER,CHSOFTI_PRO_STARTDATE,CHSOFTI_PRO_NAME)
 	    values
 	    (#{employeeId},#{hsbcStaffId},#{staffName},#{ln},#{staffRegion},#{staffLocation},#{locationType},#{onshoreOrOffshore},#{sow},#{sowExpiredDate},#{staffCategory},#{engagementType},#{hsbcDOJ},#{graduationDate},#{billingCurrency},#{billRate},#{resourceStatus},#{terminatedDate},#{terminationReason},#{eHr},#{hsbcSubDept},#{skill},#{role},#{csSubDept},#{lob},#{projectManager},#{projectName},
-	    #{email},#{gbGf},#{entryDate},#{rmUserId},#{createTime},#{updateTime},#{itindustryWorkYear,jdbcType=VARCHAR})
+	    #{email},#{gbGf},#{entryDate},#{rmUserId},#{createTime},#{updateTime},#{itindustryWorkYear,jdbcType=VARCHAR},#{chsoftiProNumber},#{chsoftiProStartdate},#{chsoftiProName})
 	</insert>  
+	<!--  <insert id="addEmployee" parameterType="com.pmo.dashboard.entity.Employee">
+	    insert into t_employee (EMPLOYEE_ID,HSBC_STAFF_ID,STAFF_NAME,LN,STAFF_REGION,STAFF_LOCATION,LOCATION_TYPE,ONSHORE_OR_OFFSHORE,SOW,SOW_EXPIRED_DATE,STAFF_CATEGORY,ENGAGEMENT_TYPE,HSBC_DOJ,GRADUATION_DATE,BILL_CURRENCY,BILL_RATE,RESOURCE_STATUS,MENTION_LWD,REASON_FOR_TERMINATION,E_HR,HSBC_SUBDEPT_ID,SKILL,ROLE,CS_SUBDEPT_ID,LOB,HSBC_MANAGER,HSBC_PROJECT_NAME,Email,GB_GF,ENTRY_DATE,RM_USER_ID,CREATE_TIME,UPDATE_TIME,ITINDUSTRY_WORK_YEAR,CHSOFTI_PRO_NUMBER,CHSOFTI_PRO_STARTDATE,CHSOFTI_PRO_NAME)
+	    values
+	    (#{employeeId},#{hsbcStaffId},#{staffName},#{ln},#{staffRegion},#{staffLocation},#{locationType},#{onshoreOrOffshore},#{sow},#{sowExpiredDate},#{staffCategory},#{engagementType},#{hsbcDOJ},#{graduationDate},#{billingCurrency},#{billRate},#{resourceStatus},#{terminatedDate},#{terminationReason},#{eHr},#{hsbcSubDept},#{skill},#{role},#{csSubDept},#{lob},#{projectManager},#{projectName},
+	    #{email},#{gbGf},#{entryDate},#{rmUserId},#{createTime},#{updateTime},#{itindustryWorkYear,jdbcType=VARCHAR},#{chsoftiProNumber},#{chsoftiProStartDate},#{chsoftiProName})
+	</insert> --> 
 	
 	<!--
 	<insert id="addEmployee" parameterType="com.pmo.dashboard.entity.Employee" >
@@ -308,7 +314,8 @@
 	
 	<update id="updateEmployee" parameterType="com.pmo.dashboard.entity.Employee">
 	    update t_employee set E_Hr = #{eHr},LOB = #{lob},HSBC_STAFF_ID = #{hsbcStaffId},STAFF_NAME = #{staffName},LN = #{ln},STAFF_REGION = #{staffRegion},STAFF_LOCATION = #{staffLocation},LOCATION_TYPE = #{locationType},ONSHORE_OR_OFFSHORE = #{onshoreOrOffshore},CS_SUBDEPT_ID = #{csSubDept},HSBC_SUBDEPT_ID = #{hsbcSubDept},HSBC_PROJECT_NAME = #{projectName},HSBC_MANAGER = #{projectManager},SOW = #{sow},SOW_EXPIRED_DATE = #{sowExpiredDate},STAFF_CATEGORY = #{staffCategory},ENGAGEMENT_TYPE = #{engagementType},HSBC_DOJ= #{hsbcDOJ},GRADUATION_DATE = #{graduationDate},BILL_CURRENCY = #{billingCurrency},BILL_RATE = #{billRate},RESOURCE_STATUS = #{resourceStatus},MENTION_LWD = #{terminatedDate},REASON_FOR_TERMINATION = #{terminationReason},ROLE = #{role},SKILL = #{skill},
-	     Email = #{email},GB_GF = #{gbGf},ENTRY_DATE = #{entryDate},UPDATE_TIME = #{updateTime},ITINDUSTRY_WORK_YEAR = #{itindustryWorkYear,jdbcType=VARCHAR} WHERE EMPLOYEE_ID = #{employeeId} 
+	     Email = #{email},GB_GF = #{gbGf},ENTRY_DATE = #{entryDate},UPDATE_TIME = #{updateTime},ITINDUSTRY_WORK_YEAR = #{itindustryWorkYear,jdbcType=VARCHAR},
+	     CHSOFTI_PRO_NUMBER = #{chsoftiProNumber},CHSOFTI_PRO_STARTDATE = #{chsoftiProStartdate},CHSOFTI_PRO_NAME = #{chsoftiProName} WHERE EMPLOYEE_ID = #{employeeId} 
 	</update>
 	
 	<select id="queryEmployeeByCsSubDeptId" parameterType="java.util.HashMap" resultMap="employeeMap">

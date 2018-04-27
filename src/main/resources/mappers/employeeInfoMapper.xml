@@ -13,7 +13,9 @@
 		<result property="resourceStatus" column="RESOURCE_STATUS" javaType="String" />
 		<result property="rmUserId" column="RM_USER_ID" javaType="String" />
 		<result property="engagementType" column="ENGAGEMENT_TYPE" javaType="String" />
-		
+		<result property="chsoftiProNumber" column="CHSOFTI_PRO_NUMBER" javaType="String" />
+		<result property="chsoftiProStartdate" column="CHSOFTI_PRO_STARTDATE" javaType="String" />
+		<result property="chsoftiProName" column="CHSOFTI_PRO_NAME" javaType="String" />
 	</resultMap>
 	
 	<select id="queryEmployeeList" parameterType="com.pmo.dashboard.entity.EmployeePageCondition" resultMap="employeeInfoMap" >

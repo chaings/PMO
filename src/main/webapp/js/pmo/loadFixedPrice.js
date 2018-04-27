@@ -17,6 +17,7 @@ $(function(){
 	dateType0();
 	dateType1();
 	dateType2();
+	dateType3();
 	loadUserForRM();
 })
 
@@ -57,6 +58,10 @@ function addEmployee(){
 		var billRate = $('#billRate').val();
 		var terminationReason = $('#terminationReason').val();
 		
+		var chsoftiProNumber =  $('#chsoftiProNumber').val();
+		var chsoftiProStartDate1 = $('#chsoftiProStartDate1').val();
+		var chsoftiProName = $('#chsoftiProName').val();
+		
 		var email = $('#email').val();
 		var gbGf = $('#gbGf').val();
 		var entryDate = $('#entryDate1').val();
@@ -89,7 +94,7 @@ function addEmployee(){
 						+ projectManager + sow + sowExpiredDate + staffCategory
 						+ engagementType + hsbcDOJ + graduationDate + role + skill
 						+ billingCurrency + billRate + terminationReason + email + gbGf
-						+ entryDate + rmName + itWorkYear;
+						+ entryDate + rmName + itWorkYear + chsoftiProNumber + chsoftiProStartDate1 + chsoftiProName;
 		if (lastConditionStr != addEmpConditionStr) {
 			lastConditionStr = addEmpConditionStr;
 		} else {
@@ -112,7 +117,9 @@ function addEmployee(){
 				"hsbcSubDept":hsbcSubDept,"projectName":projectName,"projectManager":projectManager,"sow":sow,"sowExpiredDate":sowExpiredDate,
 				"staffCategory":staffCategory,"engagementType":engagementType,"hsbcDOJ":hsbcDOJ,"graduationDate":graduationDate,
 				"role":role,"skill":skill,"billingCurrency":billingCurrency,"billRate":billRate,"resourceStatus":'Active',"terminatedDate":'',
-				"email":email,"gbGf":gbGf,"entryDate":entryDate,"rmUserId":rmName,"terminationReason":terminationReason,"itindustryWorkYear":itWorkYear},
+				"email":email,"gbGf":gbGf,"entryDate":entryDate,"rmUserId":rmName,"terminationReason":terminationReason,"itindustryWorkYear":itWorkYear,
+				"chsoftiProNumber":chsoftiProNumber,"chsoftiProStartDate":chsoftiProStartDate1,"chsoftiProName":chsoftiProName	
+			},
 			async:true,
 			cache:false,
 			type:"post",
@@ -229,6 +236,23 @@ function dateType2(){
 		showMeridian: 1
 	}).on('changeDate', function(ev){		 
 		 $('#registerEmployeeForm').bootstrapValidator('revalidateField', 'entryDate1'); 
+	});
+}
+function dateType3(){
+	$('.form_datetime3').datetimepicker({
+		weekStart: 1,
+		minView:'month',
+		todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+		language:'zh-CN',
+		format: 'yyyy-mm-dd',
+		pickerPosition: 'bottom-left',
+		showMeridian: 1
+	}).on('changeDate', function(ev){		 
+		 $('#registerEmployeeForm').bootstrapValidator('revalidateField', 'chsoftiProStartDate1'); 
 	});
 }
 

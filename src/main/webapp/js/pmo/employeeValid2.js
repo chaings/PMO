@@ -154,6 +154,17 @@ $(document).ready(function() {
 
                 }
             },
+            chsoftiProStartDate1: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please select chsoftiProStartDate'
+                    },
+                    date : {
+                        format : 'YYYY-MM-DD',
+                        message : 'Time format is incorrect'
+                    }
+                }
+            },
             sowExpiredDate1: {
                 validators: {
                     notEmpty: {
@@ -203,7 +214,7 @@ $(document).ready(function() {
                           message: 'Please enter correct Email'
                       },
                       stringLength: {
-                          max: 100,
+                          max: 32,
                           message: 'Exceeded the maxLength'
                       },
                       
@@ -382,7 +393,7 @@ $(document).ready(function() {
                     	message:'Email address is incorrect'
                     },
                     stringLength: {
-                        max: 100,
+                        max: 32,
                         message: 'Exceeded the maxLength'
                     },
                 }
@@ -433,6 +444,17 @@ $(document).ready(function() {
                     message : 'Time format is incorrect'  
                 }
 
+            }
+        },
+        chsoftiProStartDate1: {
+            validators: {
+                notEmpty: {
+                    message: 'Please select chsoftiProStartDate'
+                },
+                date : {
+                    format : 'YYYY-MM-DD',
+                    message : 'Time format is incorrect'
+                }
             }
         },
         terminatedDate1: {

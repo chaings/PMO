@@ -47,11 +47,15 @@ function addEmployee(){
 		var billRate = $('#billRate').val();
 		var entryDate = $('#entryDate1').val();
 		var resourceStatus =  $('#resourceStatus').val();
+		var chsoftiProNumber =  $('#chsoftiProNumber').val();
+		var chsoftiProStartDate1 = $('#chsoftiProStartDate1').val();
+		var chsoftiProName = $('#chsoftiProName').val();
 		
 		
 		var addEmpConditionStr = eHr + lob  + staffName + staffRegion + staffLocation + locationType
 						 		 + csSubDept + engagementType + graduationDate + role + skill
-						         + billingCurrency + billRate  + email + entryDate + resourceStatus;
+						         + billingCurrency + billRate  + email + entryDate + resourceStatus
+						         + chsoftiProNumber + chsoftiProStartDate1 + chsoftiProName;
 		if (lastConditionStr != addEmpConditionStr) {
 			lastConditionStr = addEmpConditionStr;
 		} else {
@@ -70,7 +74,9 @@ function addEmployee(){
 			data:{"eHr":eHr,"lob":lob,"staffName":staffName,"staffRegion":staffRegion,"staffLocation":staffLocation,
 				"locationType":locationType,"csSubDept":csSubDept,"engagementType":engagementType,
 				"graduationDate":graduationDate,"role":role,"skill":skill,"billingCurrency":billingCurrency,
-				"billRate":billRate,"resourceStatus":resourceStatus,"email":email,"entryDate":entryDate},
+				"billRate":billRate,"resourceStatus":resourceStatus,"email":email,"entryDate":entryDate,
+				"chsoftiProNumber":chsoftiProNumber,"chsoftiProStartDate1":chsoftiProStartDate1,"chsoftiProName":chsoftiProName
+			},
 			async:true,
 			cache:false,
 			type:"post",
