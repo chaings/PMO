@@ -22,9 +22,7 @@ import com.pom.dashboard.service.DemandDraftService;
 @Controller
 @RequestMapping(value="/demand")
 public class AddDemandController {
-	 *
-	 */
-	
+
 	@Resource
 	private AddDemandService addDemandService;
 	
