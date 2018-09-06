@@ -1,27 +1,5 @@
 package com.pmo.dashboard.entity;
 
-/**
- * @author weber
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *iuhwerwerywieruyw
- *
- *
- *
- *
- *
- */
 public class AddDemand
 {
 	
